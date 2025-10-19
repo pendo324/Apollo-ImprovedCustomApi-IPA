@@ -74,6 +74,7 @@ def load_config(config_path: str) -> AppConfig:
             "repo_url": config_data["repo_url"],
             "json_file": config_data["json_file"],
             "json_noext_file": config_data["json_noext_file"],
+            "json_glass_file": config_data["json_glass_file"],
             "app_id": config_data["app_id"],
             "app_name": config_data["app_name"],
             "caption": config_data["caption"],
@@ -163,7 +164,11 @@ def find_download_url_and_size(
     Returns:
         tuple: (download_url, size) or (None, None) if not found
     """
-    target_prefix = "NO-EXTENSIONS" if prefix == "NO-EXTENSIONS" else "Apollo"
+    target_prefix = "Apollo"
+    if prefix == "GLASS":
+        target_prefix = "GLASS"
+    elif prefix == "NO-EXTENSIONS":
+        target_prefix = "NO-EXTENSIONS"
 
     for asset in release["assets"]:
         if asset["name"].startswith(target_prefix) and asset["name"].endswith(".ipa"):
@@ -374,6 +379,13 @@ def main() -> None:
             fetched_data_all,
             fetched_data_latest,
             "NO-EXTENSIONS",
+        )
+        update_json_file(
+            config,
+            config["json_glass_file"],
+            fetched_data_all,
+            fetched_data_latest,
+            "GLASS",
         )
         print("Successfully updated sources with latest releases.")
     except Exception as e:

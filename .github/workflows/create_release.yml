@@ -221,6 +221,7 @@ jobs:
           git config --global user.email 'action@github.com'
 
           git add apps.json apps_noext.json
+          git add apps.json apps_glass.json
 
           if git diff --cached --quiet; then
             echo "No changes detected, skipping commit."
